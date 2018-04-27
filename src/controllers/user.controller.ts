@@ -1,5 +1,8 @@
-import { Controller, Get } from '../../lib';
+import { Controller, Get, ControllerComponent } from '../../lib';
 
+@ControllerComponent(
+  '/Users'
+)
 export class UserController implements Controller {
   @Get('')
   getUser(){

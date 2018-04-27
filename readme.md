@@ -1,3 +1,10 @@
+# Install and Start
+
+```bash
+npm install
+npm start
+```
+
 Creo una classe User che implementa una interfaccia Controller.
 Perchè utilizzare una interfaccia Controller? L'interfaccia ci permette di definire dei vincoli e avere quindi più certezza che il codice venga scritto in maniera più corretta.
 

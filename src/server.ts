@@ -16,7 +16,7 @@ export class Server {
 @ServerComponent({
   port: 3000,
   initMsg: 'Benvenuti nel Server Beta',
-  controllers: []
+  controllers: [UserController]
 })
 export class Server2 {
   constructor(private userController: UserController) {}
