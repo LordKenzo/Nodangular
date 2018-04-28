@@ -1,4 +1,4 @@
-### Do you want write a Controller Component on NodeJS like an Angular Component like this?
+### Do you want to write a Controller Component on NodeJS like an Angular Component like this?
 
 ```ts
 @ControllerComponent(
