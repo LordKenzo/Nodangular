@@ -1,5 +1,5 @@
-export const paramDecoratorFactory = (type: any) => {
-  return function (target: any, methodName: string | symbol, index: number) {
+const paramDecoratorFactory = (type: any) => {
+  return (target: any, methodName: string | symbol, index: number) => {
     target.metaParams = target.metaParams || { params: []};
     //console.log(target.meta);
     /*
@@ -11,10 +11,23 @@ export const paramDecoratorFactory = (type: any) => {
       target.metaParams.params[methodName] = [];
     }
     target.metaParams.params[methodName].push({ index, type });
-    console.log('PARAM', target.metaParams);
   };
 }
+
+const bodyDecoratorFactory = (type: string) => {
+  return (name?: string) => {
+    return (target: any, method: string | symbol, index: number) => {
+      target.metaParams = target.metaParams || { params: []};
+      if (target.metaParams.params[method] === undefined) {
+        target.metaParams.params[method] = [];
+      }
+      target.metaParams.params[method].push({ index, type, name });
+    }
+  }
+}
+
 
 export const Req = paramDecoratorFactory('REQ');
 export const Res = paramDecoratorFactory('RES');
 export const Next = paramDecoratorFactory('NEXT');
+export const Body = bodyDecoratorFactory('BODY');

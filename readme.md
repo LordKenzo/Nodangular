@@ -94,3 +94,52 @@ export const Req = paramDecoratorFactory('REQ');
 export const Res = paramDecoratorFactory('RES');
 export const Next = paramDecoratorFactory('NEXT');
 ```
+
+Per ogni metodo del controller decorato con dei @PARAMS, creo un array di oggetti in cui inserisco i seguenti dati: `{index. type}`, cioè la posizione del parametro ed il tipo.
+
+Dobbiamo prevedere l'acquisizione di dati dal body di una richiesta. Il primo passaggio è inserire la libreria `body-parser` con le type definition `@types/body-parser`.
+
+```ts
+export const Body = paramDecoratorFactory('BODY');
+```
+
+```ts
+case 'BODY':
+  args[index] = getParam(req, 'body');
+  break;
+```
+
+```ts
+const getParam = (source: any, paramType: string | null): any => {
+  return paramType ? source[paramType] : source;
+}
+```
+
+L'idea però è quella di avere nel controller la possibilità non solo di indicare la volontà di prelevare il body e salvarlo in una variabile, ma anche di prendere una parte del body stesso:
+
+```ts
+postUser(@Res res: Response, @Req req: Request, @Body('user') dati: any) {
+```
+
+Per cui dobbiamo prevedere di costruire un array che mi indica anche la porzione di body di interesse: `target.metaParams.params[methodName].push({ index, type, name });` Per questo aggiungiamo name a: `{index, type, name}`.
+
+ed il decoratore sarà:
+
+```ts
+const bodyDecoratorFactory = (type: string) => {
+  return (name?: string) => {
+    return (target: any, method: string | symbol, index: number) => {
+      console.log('BODYNAME', name);
+      target.metaParams = target.metaParams || { params: []};
+      if (target.metaParams.params[method] === undefined) {
+        target.metaParams.params[method] = [];
+      }
+      target.metaParams.params[method].push({ index, type, name });
+    }
+  }
+}
+```
+
+Cioè una decorator factory che restituisce una funzione che acquisisce il nome della variabile che cerchiamo nel body ed infine il decorator vero e proprio. Insomma High Order Function a tutta birra!
+
+Possiamo notare nel codice che `bodyDecoratorFactory` è proprio simile a `paramDecoratorFactory` a meno di una funzione di ritorno. Per ora le teniamo distinte.

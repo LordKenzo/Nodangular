@@ -1,7 +1,10 @@
 import express, { Request, Application, Router , NextFunction} from 'express';
+import * as bodyParser from 'body-parser';
 
 export const startServer = (Server: any) => {
   const app = express();
+  app.use(bodyParser.urlencoded({ extended: false }))
+  app.use(bodyParser.json())
   const router = express.Router();
   const porta = (process.env.PORT || Server.prototype.metaServer.port);
 
@@ -79,13 +82,20 @@ const buildParams = (req: Request, res: Response, next: NextFunction, params: an
   if (!params || !params.length) {
     return [req, res, next];
   }
-  for (const { index, type } of params) {
-    console.log(index, type)
+  for (const { index, type, name } of params) {
     switch (type) {
       case 'REQ': args[index] = req; break;
       case 'RES': args[index] = res; break;
       case 'NEXT': args[index] = next; break;
+      case 'BODY':
+        args[index] = getParam(req, 'body', name);
+        break;
     }
   }
   return args;
+}
+
+const getParam = (source: any, paramType: string | null, name: string | undefined): any => {
+  const param = paramType ? source[paramType] : source;
+  return name ? param[name] : param;
 }

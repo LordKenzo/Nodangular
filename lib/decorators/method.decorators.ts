@@ -14,3 +14,7 @@ export const methodFactory = (method: string, path: string) => {
 export const Get = (path: string = '') => {
   return methodFactory('get', path);
 }
+
+export const Post = (path: string = '') => {
+  return methodFactory('post', path);
+}
