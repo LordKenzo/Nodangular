@@ -33,7 +33,7 @@ function caricaController(app: Application, controllers: any[]){
 
 function applicaRoute(app: Application, Controller: any){
   let controller = getController(Controller);
-  console.log('Controller', controller);
+  // console.log('Controller', controller);
   console.log('Dati MetaController', controller.metaController);
   console.log('Dati MetaRoutes', controller.metaRoutes);
 
@@ -58,6 +58,10 @@ function applicaRoute(app: Application, Controller: any){
     */
     const routeHandler = (req: Request, res: Response, next: NextFunction) => {
       const args = buildParams(req, res, next, params[nomeMetodo]);
+      controller.metaInput.inputs.map( (input: string) => {
+        controller[input] = buildInput(req, input);
+      })
+
       const handler = controller[nomeMetodo].apply(controller, args);
       return handler;
     };
@@ -74,6 +78,10 @@ function applicaRoute(app: Application, Controller: any){
 
 function getController(controller: any){
   return new controller();
+}
+
+const buildInput = (req: Request, input: string) => {
+  return getParam(req, 'body', input);
 }
 
 const buildParams = (req: Request, res: Response, next: NextFunction, params: any[]): any[] => {

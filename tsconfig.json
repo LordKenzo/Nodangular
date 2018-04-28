@@ -5,7 +5,7 @@
     "lib": ["dom", "es2015"],
     "strict": true,
     "noImplicitAny": true,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
     "esModuleInterop": true,

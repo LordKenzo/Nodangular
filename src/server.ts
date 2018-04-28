@@ -9,7 +9,7 @@ import { ServerComponent } from '../lib';
 export class Server {
   constructor(private userController: UserController) {}
   main(): void {
-    console.log('Start Main');
+    console.log('Start Alfa Main');
   }
 }
 
@@ -21,6 +21,6 @@ export class Server {
 export class Server2 {
   constructor(private userController: UserController) {}
   main(): void {
-    console.log('Start Main');
+    console.log('Start Beta Main');
   }
 }
