@@ -1,10 +1,9 @@
-function methodFactory(method: string, path: string){
+export const methodFactory = (method: string, path: string) => {
   return (target: any, key: string | symbol, descriptor: PropertyDescriptor) => {
-    console.log('Decoratore Method Invocato');
-
-    target.meta = getMetaMethod(target);
-    target.meta.routes[key] = {
-      ...target.meta.routes[key],
+    // console.log('Decoratore Method Invocato');
+    target.metaRoutes = target.metaRoutes || { routes:[] };
+    target.metaRoutes.routes[key] = {
+      ...target.metaRoutes[key],
       method,
       path
     }
@@ -12,16 +11,6 @@ function methodFactory(method: string, path: string){
   }
 }
 
-export function Get(path: string){
+export const Get = (path: string = '') => {
   return methodFactory('get', path);
-}
-
-function getMetaMethod(target: any) {
-  if (!target.meta){
-    return {
-      routes: []
-    }
-  } else {
-    return target.meta;
-  }
 }

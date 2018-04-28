@@ -1,12 +1,12 @@
-import express, { Request, Application, Router } from 'express';
+import express, { Request, Application, Router , NextFunction} from 'express';
 
 export const startServer = (Server: any) => {
   const app = express();
   const router = express.Router();
-  const porta = (process.env.PORT || Server.prototype.meta.port);
+  const porta = (process.env.PORT || Server.prototype.metaServer.port);
 
   const handler = function(req: Request, res: any, next: any){
-    res.send({message: `${Server.prototype.meta.initMsg}`});
+    res.send({message: `${Server.prototype.metaServer.initMsg}`});
   }
 
   router['get'].apply(router, ['/', handler]);
@@ -14,8 +14,8 @@ export const startServer = (Server: any) => {
   app.use('/', router);
 
   app.listen(porta, () => {
-  console.log(`${Server.prototype.meta.initMsg} (${porta})`);
-  caricaController(app, Server.prototype.meta.controllers);
+  console.log(`${Server.prototype.metaServer.initMsg} (${porta})`);
+  caricaController(app, Server.prototype.metaServer.controllers);
 
   // Codice da eliminare
   const server = new Server();
@@ -28,14 +28,18 @@ function caricaController(app: Application, controllers: any[]){
   (controllers || []).map(controller => applicaRoute(app, controller));
 }
 
-function applicaRoute(app: Application, controller: any){
-  const instanceOfController = getController(controller);
-  /*
-  1. Per convenienza esplicito alcune costanti dei meta dati
-  */
-  const meta = instanceOfController.meta;
-  const url = meta.basePath;
-  const routes = meta.routes;
+function applicaRoute(app: Application, Controller: any){
+  let controller = getController(Controller);
+  console.log('Controller', controller);
+  console.log('Dati MetaController', controller.metaController);
+  console.log('Dati MetaRoutes', controller.metaRoutes);
+
+  const metaController = controller.metaController;
+  const metaRoutes = controller.metaRoutes;
+  const metaParams = controller.metaParams;
+  const basePath = metaController.basePath;
+  const routes = metaRoutes.routes;
+  const params = metaParams.params;
   /*
   Curiosità: Per far si che la costante router abbia la firma dell'indice
   */
@@ -49,8 +53,9 @@ function applicaRoute(app: Application, controller: any){
     /*
     3. Creo un handler da applicare all'oggetto Router
     */
-    const routeHandler = () => {
-      const handler = instanceOfController[nomeMetodo].apply(instanceOfController);
+    const routeHandler = (req: Request, res: Response, next: NextFunction) => {
+      const args = buildParams(req, res, next, params[nomeMetodo]);
+      const handler = controller[nomeMetodo].apply(controller, args);
       return handler;
     };
     /*
@@ -61,9 +66,26 @@ function applicaRoute(app: Application, controller: any){
   /*
   5. Ecco a cosa ci serviva l'app di Express, in questo modo gli passiamo il nostro router per la basePath del Controller
   */
-  app.use(url, router);
+  app.use(basePath, router);
 }
 
 function getController(controller: any){
-  return new controller;
+  return new controller();
+}
+
+const buildParams = (req: Request, res: Response, next: NextFunction, params: any[]): any[] => {
+
+  const args: any[] = [];
+  if (!params || !params.length) {
+    return [req, res, next];
+  }
+  for (const { index, type } of params) {
+    console.log(index, type)
+    switch (type) {
+      case 'REQ': args[index] = req; break;
+      case 'RES': args[index] = res; break;
+      case 'NEXT': args[index] = next; break;
+    }
+  }
+  return args;
 }

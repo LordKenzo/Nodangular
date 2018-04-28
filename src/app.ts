@@ -1,7 +1,7 @@
-import { NodeModule } from '../lib';
+import { NodAngular } from '../lib';
 import { Server, Server2} from './server';
 
-@NodeModule({
+@NodAngular({
   bootstrap: [Server, Server2]
 })
 class App {}
