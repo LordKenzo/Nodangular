@@ -10,6 +10,7 @@ import {
   Input
 } from '../../lib';
 import { Request, Response, NextFunction } from 'express';
+import { Secured } from '../../lib/decorators/method.decorators';
 
 interface User {
   firstName: string,
@@ -39,6 +40,7 @@ export class UserController implements Controller {
     res.status(200).send({message: 'Get User OK'});
   }
 
+  @Secured(['ADMIN'])
   @Get('/admin')
   getAdmin(@Res res: Response){
     console.log('Get Admin by UserController');

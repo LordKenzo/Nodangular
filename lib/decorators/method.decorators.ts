@@ -18,3 +18,21 @@ export const Get = (path: string = '') => {
 export const Post = (path: string = '') => {
   return methodFactory('post', path);
 }
+
+export const Put = (path: string = '') => {
+  return methodFactory('put', path);
+}
+
+export const Delete = (path: string = '') => {
+  return methodFactory('delete', path);
+}
+
+export function Secured(authorizedGroup: string[]): MethodDecorator {
+  return (target: any, key, descriptor) => {
+    target.metaRoutes = target.metaRoutes || { routes: [] };
+    target.metaRoutes.routes[key] = {
+      ...target.metaRoutes.routes[key],
+      authorizedGroup };
+    return descriptor;
+  };
+}

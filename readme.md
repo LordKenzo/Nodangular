@@ -7,8 +7,8 @@
 )
 export class UserController implements Controller {
 
-  @Input user: User;
-  @Input password: string;
+  @Input() user: User;
+  @Input() password: string;
 
   @Post()
   postUser(@Res res: Response, @Req req: Request) {
@@ -25,6 +25,7 @@ export class UserController implements Controller {
     res.status(200).send({message: 'Get User OK'});
   }
 
+  @Secured(['ADMIN'])
   @Get('/admin')
   getAdmin(@Res res: Response){
     console.log('Get Admin by UserController');
@@ -37,7 +38,7 @@ export class UserController implements Controller {
 
 ```bash
 npm install
-npm start
+npm run start:dev
 ```
 
 Nella folder `src` troverai un esempio di creazione di un Controller il cui scopo è quello di fornire i metodi di accesso ad una risorsa tramite una API definita dagli endpoint che vengono decorati.
