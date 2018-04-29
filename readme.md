@@ -40,13 +40,16 @@ npm install
 npm start
 ```
 
-Creo una classe User che implementa una interfaccia Controller.
-Perchè utilizzare una interfaccia Controller? L'interfaccia ci permette di definire dei vincoli e avere quindi più certezza che il codice venga scritto in maniera più corretta.
+Nella folder `src` troverai un esempio di creazione di un Controller il cui scopo è quello di fornire i metodi di accesso ad una risorsa tramite una API definita dagli endpoint che vengono decorati.
+
+Nota sui tipi: il progetto inizialmente ha la maggior parte del codice in `any` e quindi debolmente tipizzata. Più avanti verranno create le interfaccie e i type necessari a fornire a TypeScript le dovute informazioni che faranno si che il service di TypeScript ci possa fornire feedback su errori nel codice.
+
+Ad esempio, perchè utilizzare una interfaccia Controller? L'interfaccia ci permette di definire dei vincoli e avere quindi più certezza che il codice venga scritto in maniera più corretta.
 
 # Cosa deve fare un Controller?
 
 Il controller è una classe che gestisce degli Endpoint, delle Richieste, delle Response, ma anche una serie di parametri provenienti dalla Query String o dal Body della Richiesta.
-Ha dei metodi.
+Ha dei metodi che associamo agli HTTP VERBS tramite i decoratori: `@Get`, `@Post`, `@Put` o `@Delete`, ma abbiamo anche altri decoratori come `@Controller`, `@Server`, `@NodAngular` o `@Input` che ci permettono di creare un codice molto simile ad Angular lato backend.
 
 # Meta Dati
 
