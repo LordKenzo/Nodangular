@@ -21,8 +21,8 @@ interface User {
 )
 export class UserController implements Controller {
 
-  @Input user: User;
-  @Input password: string;
+  @Input() user: User;
+  @Input() password: string;
 
   @Post()
   postUser(@Res res: Response, @Req req: Request) {
